@@ -1,4 +1,4 @@
-name: Attach JS to Release
+name: Attach Integration ZIP to Release
 
 on:
   release:
@@ -8,17 +8,48 @@ permissions:
   contents: write
 
 jobs:
-  upload-asset:
+  build-and-upload:
     runs-on: ubuntu-latest
+    env:
+      INTEGRATION: energy_graph_scheduler
+      HACS_ZIP: energy-graph-scheduler-sync.zip
     steps:
       - uses: actions/checkout@v4
 
-      # (valgfrit) tjek at filen findes
-      - run: test -f thermostat-pro-timeline.js
+      - name: Verify required files exist
+        run: |
+          test -f custom_components/${{ env.INTEGRATION }}/manifest.json
+          test -f hacs.json
 
-      - name: Upload JS asset
+      - name: Extract version from tag
+        id: ver
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          # strip leading "v" if present
+          VER="${TAG#v}"
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+
+      - name: Update manifest.json with release version
+        run: |
+          jq --arg v "${{ steps.ver.outputs.version }}" '.version=$v' \
+            "custom_components/${{ env.INTEGRATION }}/manifest.json" \
+            > manifest.tmp
+          mv manifest.tmp "custom_components/${{ env.INTEGRATION }}/manifest.json"
+
+      - name: Build ZIP for release (HACS only)
+        run: |
+          mkdir -p dist
+          BASENAME="${{ env.HACS_ZIP }}"
+          # Skift til integrationsmappen for at undgå ekstra "custom_components" i ZIP
+          cd custom_components/${{ env.INTEGRATION }}
+          zip -r "../../dist/${BASENAME}" . \
+            -x "**/__pycache__/*" "**/*.pyc" ".DS_Store" ".git/*"
+
+      - name: Upload ZIP asset to release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: thermostat-pro-timeline.js
+          files: |
+            dist/energy-graph-scheduler-sync.zip
+          fail_on_unmatched_files: true
