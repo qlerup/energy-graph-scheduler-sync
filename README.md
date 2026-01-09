@@ -1,8 +1,16 @@
 # Energy Graph Scheduler — Sync
 
-<img width="1024" height="125" alt="image" src="https://github.com/user-attachments/assets/c80bb31b-6c66-4228-9ceb-321b30022abf" />
+<img width="1044" height="136" alt="image" src="https://github.com/user-attachments/assets/52267b4b-617d-4752-9d60-a4cba7b89a35" />
 
-This repo includes a Lovelace card (`energy-graph-scheduler-card.js`) that can sync “cheapest time” sections between all users/devices using a small Home Assistant backend integration.
+
+This setup consists of two separate parts:
+
+1. The Lovelace card (installed separately):
+  - https://github.com/qlerup/energy-graph-scheduler-card
+2. The Home Assistant backend integration (this repo / your HA config):
+  - `custom_components/energy_graph_scheduler/`
+
+The integration provides syncing of the card’s “cheapest time” sections between all users/devices via Home Assistant `.storage`.
 
 ## What is synced?
 
@@ -16,18 +24,19 @@ They are synced **per selected electricity price entity** (e.g. `sensor.electric
 
 ## Installation / Setup
 
-1. Ensure these files are present:
-   - `custom_components/energy_graph_scheduler/`
-   - `www/energy-graph-scheduler-card.js`
+1. Install the card (separately):
+  - Follow the instructions in: https://github.com/qlerup/energy-graph-scheduler-card
 
-2. Restart Home Assistant.
+2. Install the sync integration (this part):
+  - Ensure this folder exists in your HA config:
+    - `custom_components/energy_graph_scheduler/`
 
-3. Add the integration:
+3. Restart Home Assistant.
+
+4. Add the integration:
    - Settings → Devices & Services → Add Integration → **Energy Graph Scheduler**
 
-4. Add the card as a Lovelace resource (if you haven’t already):
-   - URL: `/local/energy-graph-scheduler-card.js`
-   - Type: `JavaScript module` (or `JavaScript` if you load it as a classic resource — the card avoids ESM imports)
+5. In the card configuration/editor, enable **Sync** (see below).
 
 ## Enable sync in the card
 
