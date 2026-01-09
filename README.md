@@ -1,5 +1,7 @@
 # Energy Graph Scheduler — Sync
 
+<img width="1024" height="125" alt="image" src="https://github.com/user-attachments/assets/c80bb31b-6c66-4228-9ceb-321b30022abf" />
+
 This repo includes a Lovelace card (`energy-graph-scheduler-card.js`) that can sync “cheapest time” sections between all users/devices using a small Home Assistant backend integration.
 
 ## What is synced?
