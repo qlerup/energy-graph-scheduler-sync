@@ -1,5 +1,8 @@
 # Energy Graph Scheduler — Sync
 
+[![Downloads](https://img.shields.io/github/downloads/qlerup/energy-graph-scheduler-sync/total)](https://github.com/qlerup/energy-graph-scheduler-sync/releases)
+
+
 <img width="1044" height="136" alt="image" src="https://github.com/user-attachments/assets/52267b4b-617d-4752-9d60-a4cba7b89a35" />
 
 
